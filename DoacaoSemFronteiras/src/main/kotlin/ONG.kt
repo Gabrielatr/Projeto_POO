@@ -1,16 +1,49 @@
-abstract class ONG (nome: String, categoria: String, pais: String, url: String) {
-    abstract fun doacao(quantia: Double);
+
+interface IONG{
+    fun doacao(quantia: Double);
+    fun atualizarDados();
 }
 
-class OngsPortuguesas(nome: String, categoria: String, pais: String, url: String): ONG(nome, categoria, pais, url) {
+interface IListaONGs{
+    fun adicionarOng();
+    fun removerOng();
+    fun pesquisa(nome: String);
+    fun filtroPorPais(pais: String);
+    fun filtroPorCategoria(categoria: String);
+
+}
+
+class ListaOngs () : IListaONGs {
+
+    override fun adicionarOng() {
+        TODO("Not yet implemented")
+    }
+
+    override fun removerOng() {
+        TODO("Not yet implemented")
+    }
+
+    override fun pesquisa(nome: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun filtroPorPais(pais: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun filtroPorCategoria(categoria: String) {
+        TODO("Not yet implemented")
+    }
+
+
+}
+
+class ONG(val nome: String, val categoria: String, val pais: String, val url: String): IONG{
     override fun doacao(quantia: Double) {
         TODO("Not yet implemented")
     }
 
-}
-
-class OngsBrasileiras(nome: String, categoria: String, pais: String, url: String): ONG(nome, categoria, pais, url) {
-    override fun doacao(quantia: Double) {
+    override fun atualizarDados() {
         TODO("Not yet implemented")
     }
 
