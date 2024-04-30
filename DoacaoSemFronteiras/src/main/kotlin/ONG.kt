@@ -38,7 +38,7 @@ class ListaOngs () : IListaONGs {
 
 }
 
-class ONG(val nome: String, val categoria: String, val pais: String, val url: String): IONG{
+class ONG(val nome: String, val categoria: String, val url: String): IONG{
     override fun doacao(quantia: Double) {
         TODO("Not yet implemented")
     }
@@ -46,5 +46,24 @@ class ONG(val nome: String, val categoria: String, val pais: String, val url: St
     override fun atualizarDados() {
         TODO("Not yet implemented")
     }
+
+}
+
+fun main() {
+    val ongcsv = "C:\\Users\\conta\\OneDrive\\Documentos\\dev_\\poo\\project\\Projeto_POO\\DoacaoSemFronteiras\\src\\main\\kotlin\\ongs.csv"
+    val arquivo = CSVFile(ongcsv)
+
+    arquivo.ongs.forEach { (pais, ongs) ->
+        println("País: $pais")
+        ongs.forEachIndexed { index, ong ->
+            println("Indexed: ${index + 1}")
+            println("Nome: ${ong.nome}")
+            println("Categoria: ${ong.categoria}")
+            println("URL: ${ong.url}")
+        }
+    }
+
+
+
 
 }
