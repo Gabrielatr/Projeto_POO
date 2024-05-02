@@ -4,8 +4,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class BankApiApplication
+class DoacaoSemFronteirasApiApplication
 
 fun main(args: Array<String>) {
-	runApplication<BankApiApplication>(*args)
+	runApplication<DoacaoSemFronteirasApiApplication>(*args)
 }

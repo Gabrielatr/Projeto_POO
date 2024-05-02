@@ -11,7 +11,6 @@ class CSVFile(val path: String) {
         }catch (e: Exception){
             println("Erro ao ler o ficheiro. Por favor verifique se o caminho está correto.")
         }
-
     }
 
     fun readFile(csvFile: File){
