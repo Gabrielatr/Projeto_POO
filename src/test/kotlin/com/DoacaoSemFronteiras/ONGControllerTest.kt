@@ -23,7 +23,7 @@ class ONGControllerTest {
     @Test
     fun `test find all`() {
         var csvFile = CSVFile("src/main/kotlin/com/eprogramar/bank/ongs.csv")
-        var lista = csvFile.retornaMutable()
+        var lista = csvFile.ongs
         ONGRepository.saveAll(lista)
 
         mockMvc.perform(MockMvcRequestBuilders.get("/ONGs"))
@@ -39,7 +39,7 @@ class ONGControllerTest {
     @Test
     fun `test find by id`() {
         var csvFile = CSVFile("src/main/kotlin/com/eprogramar/bank/ongs.csv")
-        var lista = csvFile.retornaMutable()
+        var lista = csvFile.ongs
         ONGRepository.saveAll(lista)
 //        val ONG = ONGRepository.save(ONG(name = "Test", category = "123", url = "987654321"))
 
@@ -55,7 +55,7 @@ class ONGControllerTest {
     @Test
     fun `test create all ONGs`() {
         var csvFile = CSVFile("src/main/kotlin/com/eprogramar/bank/ongs.csv")
-        var lista = csvFile.retornaMutable()
+        var lista = csvFile.ongs
         val json = ObjectMapper().writeValueAsString(lista)
         ONGRepository.deleteAll()
         mockMvc.perform(MockMvcRequestBuilders.post("/ONGs/all")
@@ -89,7 +89,7 @@ class ONGControllerTest {
     @Test
     fun `test update ONG`() {
         var csvFile = CSVFile("src/main/kotlin/com/eprogramar/bank/ongs.csv")
-        var lista = csvFile.retornaMutable()
+        var lista = csvFile.ongs
         ONGRepository.saveAll(lista)
 
 //        val ONG = ONGRepository

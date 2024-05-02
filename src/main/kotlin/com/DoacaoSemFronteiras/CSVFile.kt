@@ -5,8 +5,16 @@ import java.io.File
 class CSVFile(val path: String) {
     val ongs = mutableListOf<ONG>()
 
-    fun retornaMutable() : MutableList<ONG> {
-        val csvFile = File(path);
+    init{
+        try{
+            readFile(File(path))
+        }catch (e: Exception){
+            println("Erro ao ler o ficheiro. Por favor verifique se o caminho está correto.")
+        }
+
+    }
+
+    fun readFile(csvFile: File){
         csvFile.forEachLine { line ->
             val props = line.split(",");
             val id = props[0].trim().toLong()
@@ -17,6 +25,6 @@ class CSVFile(val path: String) {
                 "Portugal", "Brasil" -> ongs.add(ong)
             }
         }
-        return ongs
     }
+
 }
