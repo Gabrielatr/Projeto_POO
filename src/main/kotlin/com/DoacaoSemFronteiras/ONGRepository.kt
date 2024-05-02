@@ -1,4 +1,4 @@
-package com.eprogramar.bank
+package com.DoacaoSemFronteiras
 
 import org.springframework.data.jpa.repository.JpaRepository
 

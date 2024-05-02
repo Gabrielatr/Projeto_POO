@@ -1,6 +1,6 @@
-package com.eprogramar.bank
+package com.DoacaoSemFronteiras
 
-import com.eprogramar.bank.ONGRepository
+import com.DoacaoSemFronteiras.ONGRepository
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

@@ -1,4 +1,4 @@
-package com.eprogramar.bank
+package com.DoacaoSemFronteiras
 
 import java.io.File
 import javax.persistence.Entity

@@ -1,4 +1,4 @@
-package com.eprogramar.bank
+package com.DoacaoSemFronteiras
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.Assertions
