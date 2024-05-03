@@ -22,7 +22,7 @@ class ONGControllerTest {
 
     @Test
     fun `test find all`() {
-        var csvFile = CSVFile("src/main/kotlin/com/eprogramar/bank/ongs.csv")
+        var csvFile = CSVFile("src/main/kotlin/com/DoacaoSemFronteiras/ongs.csv")
         var lista = csvFile.ongs
         ONGRepository.saveAll(lista)
 
@@ -38,7 +38,7 @@ class ONGControllerTest {
 
     @Test
     fun `test find by id`() {
-        var csvFile = CSVFile("src/main/kotlin/com/eprogramar/bank/ongs.csv")
+        var csvFile = CSVFile("src/main/kotlin/com/DoacaoSemFronteiras/ongs.csv")
         var lista = csvFile.ongs
         ONGRepository.saveAll(lista)
 //        val ONG = ONGRepository.save(ONG(name = "Test", category = "123", url = "987654321"))
@@ -54,7 +54,7 @@ class ONGControllerTest {
 
     @Test
     fun `test create all ONGs`() {
-        var csvFile = CSVFile("src/main/kotlin/com/eprogramar/bank/ongs.csv")
+        var csvFile = CSVFile("src/main/kotlin/com/DoacaoSemFronteiras/ongs.csv")
         var lista = csvFile.ongs
         val json = ObjectMapper().writeValueAsString(lista)
         ONGRepository.deleteAll()
@@ -88,7 +88,7 @@ class ONGControllerTest {
 
     @Test
     fun `test update ONG`() {
-        var csvFile = CSVFile("src/main/kotlin/com/eprogramar/bank/ongs.csv")
+        var csvFile = CSVFile("src/main/kotlin/com/DoacaoSemFronteiras/ongs.csv")
         var lista = csvFile.ongs
         ONGRepository.saveAll(lista)
 
