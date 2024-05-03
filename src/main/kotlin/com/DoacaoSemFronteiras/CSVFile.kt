@@ -19,7 +19,8 @@ class CSVFile(val path: String) {
             val props = line.split(",");
             val id = props[0].trim().toLong()
             val pais = props[3].trim()
-            val ong = ONG(id, props[1], props[2], props[4])
+            val category = Category.fromDescricao(props[2].trim())
+            val ong = ONG(id, props[1], category, props[4])
 
             when (pais) {
                 "Portugal", "Brasil" -> ongs.add(ong)
