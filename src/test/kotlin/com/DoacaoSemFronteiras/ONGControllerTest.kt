@@ -70,7 +70,8 @@ class ONGControllerTest {
 
     @Test
     fun `test create ONG`() {
-        val ONG = ONG(name = "ONGTeste", category = "Meio Ambiente", url = "987654321")
+        val category = Category.valueOf("MEIO_AMBIENTE")
+        val ONG = ONG(name = "ONGTeste", category = category, url = "987654321")
         val json = ObjectMapper().writeValueAsString(ONG)
         ONGRepository.deleteAll()
         mockMvc.perform(MockMvcRequestBuilders.post("/ONGs")
@@ -79,7 +80,7 @@ class ONGControllerTest {
                 .content(json))
                 .andExpect(MockMvcResultMatchers.status().isCreated)
                 .andExpect(MockMvcResultMatchers.jsonPath("\$.name").value(ONG.name))
-                .andExpect(MockMvcResultMatchers.jsonPath("\$.category").value(ONG.category))
+                .andExpect(MockMvcResultMatchers.jsonPath("\$.category").value(ONG.category.toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("\$.url").value(ONG.url))
                 .andDo(MockMvcResultHandlers.print())
 
@@ -113,8 +114,9 @@ class ONGControllerTest {
 
     @Test
     fun `test delete ONG`() {
+        val category = Category.valueOF("MEIO_AMBIENTE")
         val ONG = ONGRepository
-                .save(ONG(name = "Test", category = "123", url = "987654321"))
+                .save(ONG(name = "Test", category = category, url = "987654321"))
         mockMvc.perform(MockMvcRequestBuilders.delete("/ONGs/${ONG.id}"))
                 .andExpect(MockMvcResultMatchers.status().isOk)
                 .andDo(MockMvcResultHandlers.print())
