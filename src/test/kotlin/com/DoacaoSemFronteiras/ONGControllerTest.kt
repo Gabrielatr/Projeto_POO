@@ -38,17 +38,17 @@ class ONGControllerTest {
 
     @Test
     fun `test find by id`() {
-        var csvFile = CSVFile("src/main/kotlin/com/DoacaoSemFronteiras/ongs.csv")
-        var lista = csvFile.ongs
+        val csvFile = CSVFile("src/main/kotlin/com/DoacaoSemFronteiras/ongs.csv")
+        val lista = csvFile.ongs
         ONGRepository.saveAll(lista)
-//        val ONG = ONGRepository.save(ONG(name = "Test", category = "123", url = "987654321"))
+        val ONG = ONGRepository.findById(1).get()
 
         mockMvc.perform(MockMvcRequestBuilders.get("/ONGs/1"))
                 .andExpect(MockMvcResultMatchers.status().isOk)
-//                .andExpect(MockMvcResultMatchers.jsonPath("\$.id").value(ONG.id))
-//                .andExpect(MockMvcResultMatchers.jsonPath("\$.name").value(ONG.name))
-//                .andExpect(MockMvcResultMatchers.jsonPath("\$.category").value(ONG.category))
-//                .andExpect(MockMvcResultMatchers.jsonPath("\$.url").value(ONG.url))
+                .andExpect(MockMvcResultMatchers.jsonPath("\$.id").value(ONG.id))
+                .andExpect(MockMvcResultMatchers.jsonPath("\$.name").value(ONG.name))
+                .andExpect(MockMvcResultMatchers.jsonPath("\$.category").value(ONG.category))
+                .andExpect(MockMvcResultMatchers.jsonPath("\$.url").value(ONG.url))
                 .andDo(MockMvcResultHandlers.print())
     }
 
@@ -88,27 +88,27 @@ class ONGControllerTest {
 
     @Test
     fun `test update ONG`() {
-        var csvFile = CSVFile("src/main/kotlin/com/DoacaoSemFronteiras/ongs.csv")
-        var lista = csvFile.ongs
+        val csvFile = CSVFile("src/main/kotlin/com/DoacaoSemFronteiras/ongs.csv")
+        val lista = csvFile.ongs
         ONGRepository.saveAll(lista)
 
-//        val ONG = ONGRepository
-//                .save(ONG(name = "Test", category = "123", url = "987654321"))
-//                .copy(name = "Updated")
-        val json = ObjectMapper().writeValueAsString(lista)
-        mockMvc.perform(MockMvcRequestBuilders.put("/ONGs/1")
+        val newONG = ONGRepository.findById(1).get()
+                        .copy(name = "NovoNome", url = "https://localhost:8080")
+
+        val json = ObjectMapper().writeValueAsString(newONG)
+        mockMvc.perform(MockMvcRequestBuilders.put("/ONGs/${newONG.id}")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
                 .andExpect(MockMvcResultMatchers.status().isOk)
-//                .andExpect(MockMvcResultMatchers.jsonPath("\$.name").value(ONG.name))
-//                .andExpect(MockMvcResultMatchers.jsonPath("\$.category").value(ONG.category))
-//                .andExpect(MockMvcResultMatchers.jsonPath("\$.url").value(ONG.url))
+                .andExpect(MockMvcResultMatchers.jsonPath("\$.name").value(newONG.name))
+                .andExpect(MockMvcResultMatchers.jsonPath("\$.category").value(newONG.category))
+                .andExpect(MockMvcResultMatchers.jsonPath("\$.url").value(newONG.url))
                 .andDo(MockMvcResultHandlers.print())
 
-        val findById = ONGRepository.findById(1!!)
+        val findById = ONGRepository.findById(newONG.id!!)
         Assertions.assertTrue(findById.isPresent)
-        Assertions.assertEquals("teste Update", findById.get().name)
+        Assertions.assertEquals("NovoNome", findById.get().name)
     }
 
     @Test
