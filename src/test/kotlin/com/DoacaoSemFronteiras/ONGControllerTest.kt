@@ -11,14 +11,20 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import java.io.IOException
+import org.junit.jupiter.api.BeforeEach
 
 @SpringBootTest
 @AutoConfigureMockMvc
 class ONGControllerTest {
 
-    @Autowired lateinit var mockMvc: MockMvc
+    @Autowired
+    lateinit var mockMvc: MockMvc
 
-    @Autowired lateinit var ONGRepository: ONGRepository
+    @Autowired
+    lateinit var ONGRepository: ONGRepository
+
+
 
     @Test
     fun `test find all`() {
@@ -27,13 +33,13 @@ class ONGControllerTest {
         ONGRepository.saveAll(lista)
 
         mockMvc.perform(MockMvcRequestBuilders.get("/ONGs"))
-                .andExpect(MockMvcResultMatchers.status().isOk)
-                .andExpect(MockMvcResultMatchers.jsonPath("\$").isArray)
-                .andExpect(MockMvcResultMatchers.jsonPath("\$[0].id").isNumber)
-                .andExpect(MockMvcResultMatchers.jsonPath("\$[0].name").isString)
-                .andExpect(MockMvcResultMatchers.jsonPath("\$[0].category").isString)
-                .andExpect(MockMvcResultMatchers.jsonPath("\$[0].url").isString)
-                .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("\$").isArray)
+            .andExpect(MockMvcResultMatchers.jsonPath("\$[0].id").isNumber)
+            .andExpect(MockMvcResultMatchers.jsonPath("\$[0].name").isString)
+            .andExpect(MockMvcResultMatchers.jsonPath("\$[0].category").isString)
+            .andExpect(MockMvcResultMatchers.jsonPath("\$[0].url").isString)
+            .andDo(MockMvcResultHandlers.print())
     }
 
     @Test
@@ -41,15 +47,18 @@ class ONGControllerTest {
         val csvFile = CSVFile("src/main/kotlin/com/DoacaoSemFronteiras/ongs.csv")
         val lista = csvFile.ongs
         ONGRepository.saveAll(lista)
+        println(ONGRepository.saveAll(lista))
         val ONG = ONGRepository.findById(1).get()
 
         mockMvc.perform(MockMvcRequestBuilders.get("/ONGs/1"))
-                .andExpect(MockMvcResultMatchers.status().isOk)
-                .andExpect(MockMvcResultMatchers.jsonPath("\$.id").value(ONG.id))
-                .andExpect(MockMvcResultMatchers.jsonPath("\$.name").value(ONG.name))
-                .andExpect(MockMvcResultMatchers.jsonPath("\$.category").value(ONG.category))
-                .andExpect(MockMvcResultMatchers.jsonPath("\$.url").value(ONG.url))
-                .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.id").value(ONG.id))
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.name").value(ONG.name))
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.category").value(ONG.category.toString()))
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.url").value(ONG.url))
+            .andDo(MockMvcResultHandlers.print())
+
+        val finById = ONGRepository.findById(1)
     }
 
     @Test
@@ -58,10 +67,12 @@ class ONGControllerTest {
         var lista = csvFile.ongs
         val json = ObjectMapper().writeValueAsString(lista)
         ONGRepository.deleteAll()
-        mockMvc.perform(MockMvcRequestBuilders.post("/ONGs/all")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(json))
+        mockMvc.perform(
+            MockMvcRequestBuilders.post("/ONGs/all")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json)
+        )
             .andExpect(MockMvcResultMatchers.status().isCreated)
             .andDo(MockMvcResultHandlers.print())
 
@@ -74,15 +85,17 @@ class ONGControllerTest {
         val ONG = ONG(name = "ONGTeste", category = category, url = "987654321")
         val json = ObjectMapper().writeValueAsString(ONG)
         ONGRepository.deleteAll()
-        mockMvc.perform(MockMvcRequestBuilders.post("/ONGs")
+        mockMvc.perform(
+            MockMvcRequestBuilders.post("/ONGs")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(json))
-                .andExpect(MockMvcResultMatchers.status().isCreated)
-                .andExpect(MockMvcResultMatchers.jsonPath("\$.name").value(ONG.name))
-                .andExpect(MockMvcResultMatchers.jsonPath("\$.category").value(ONG.category.toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("\$.url").value(ONG.url))
-                .andDo(MockMvcResultHandlers.print())
+                .content(json)
+        )
+            .andExpect(MockMvcResultMatchers.status().isCreated)
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.name").value(ONG.name))
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.category").value(ONG.category.toString()))
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.url").value(ONG.url))
+            .andDo(MockMvcResultHandlers.print())
 
         Assertions.assertFalse(ONGRepository.findAll().isEmpty())
     }
@@ -94,18 +107,20 @@ class ONGControllerTest {
         ONGRepository.saveAll(lista)
 
         val newONG = ONGRepository.findById(1).get()
-                        .copy(name = "NovoNome", url = "https://localhost:8080")
+            .copy(name = "NovoNome", url = "https://localhost:8080")
 
         val json = ObjectMapper().writeValueAsString(newONG)
-        mockMvc.perform(MockMvcRequestBuilders.put("/ONGs/${newONG.id}")
+        mockMvc.perform(
+            MockMvcRequestBuilders.put("/ONGs/${newONG.id}")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(json))
-                .andExpect(MockMvcResultMatchers.status().isOk)
-                .andExpect(MockMvcResultMatchers.jsonPath("\$.name").value(newONG.name))
-                .andExpect(MockMvcResultMatchers.jsonPath("\$.category").value(newONG.category))
-                .andExpect(MockMvcResultMatchers.jsonPath("\$.url").value(newONG.url))
-                .andDo(MockMvcResultHandlers.print())
+                .content(json)
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.name").value(newONG.name))
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.category").value(newONG.category.toString()))
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.url").value(newONG.url))
+            .andDo(MockMvcResultHandlers.print())
 
         val findById = ONGRepository.findById(newONG.id!!)
         Assertions.assertTrue(findById.isPresent)
@@ -114,15 +129,20 @@ class ONGControllerTest {
 
     @Test
     fun `test delete ONG`() {
-        val category = Category.valueOF("MEIO_AMBIENTE")
-        val ONG = ONGRepository
-                .save(ONG(name = "Test", category = category, url = "987654321"))
-        mockMvc.perform(MockMvcRequestBuilders.delete("/ONGs/${ONG.id}"))
-                .andExpect(MockMvcResultMatchers.status().isOk)
-                .andDo(MockMvcResultHandlers.print())
 
-        val findById = ONGRepository.findById(ONG.id!!)
+        val deleteONG =
+            ONGRepository.save(ONG(name = "ONGTeste", category = Category.valueOf("MEIO_AMBIENTE"), url = "987654321"))
+
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.delete("/ONGs/${deleteONG.id}")
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andDo(MockMvcResultHandlers.print())
+
+        val findById = ONGRepository.findById(deleteONG.id!!)
         Assertions.assertFalse(findById.isPresent)
+
     }
 
 }
