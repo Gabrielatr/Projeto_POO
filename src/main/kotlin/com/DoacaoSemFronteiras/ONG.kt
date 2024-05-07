@@ -13,9 +13,10 @@ enum class Category(val descricao: String) {
         CRIANÇA("Criança"),
         VIOLÊNCIA("Violência"),
         DEFICIÊNCIA("Deficiência"),
-        SEGURANÇA_ALIMENTAR("Segurança alimentar"),
+        SEGURANÇA_ALIMENTAR("Segurança Alimentar"),
         CULTURA_E_ARTE("Cultura e Arte"),
-        MULHER("Mulher");
+        MULHER("Mulher"),
+        SEGURANÇA("Segurança");
 
         companion object {
                 fun fromDescricao(descricao: String): Category{
@@ -30,5 +31,6 @@ data class ONG(
         var id: Long? = null,
         val name: String,
         val category: Category,
+        val country: String,
         val url: String
 )

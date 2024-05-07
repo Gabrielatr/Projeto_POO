@@ -1,6 +1,7 @@
 package com.DoacaoSemFronteiras
 
 import com.DoacaoSemFronteiras.ONGRepository
+import org.springframework.data.domain.Example
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -26,6 +27,17 @@ class ONGController(private val repository: ONGRepository) {
                 ResponseEntity.ok(it)
             }.orElse(ResponseEntity.notFound().build())
 
+    @GetMapping("/Brasil")
+    fun getBrasilONGs() : ResponseEntity<List<ONG>> {
+        val ongsBrasileiras = repository.findAll().filter { it.country == "Brasil" }
+        return ResponseEntity.ok(ongsBrasileiras)
+    }
+
+    @GetMapping("/Portugal")
+    fun getPortugalONGs() : ResponseEntity<List<ONG>> {
+        val ongsPortuguesas = repository.findAll().filter { it.country == "Portugal" }
+        return ResponseEntity.ok(ongsPortuguesas)
+    }
     @GetMapping("category/{category}")
     fun getByCategory(@PathVariable category: Category): ResponseEntity<List<ONG>> {
         val ongs = repository.findByCategory(category)
