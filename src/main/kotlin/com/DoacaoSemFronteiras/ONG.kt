@@ -11,5 +11,6 @@ data class ONG(
         var id: Long? = null,
         val name: String,
         val category: String,
+        val country: String,
         val url: String
 )
