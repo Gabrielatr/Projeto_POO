@@ -26,6 +26,16 @@ class ONGController(private val repository: ONGRepository) {
                 ResponseEntity.ok(it)
             }.orElse(ResponseEntity.notFound().build())
 
+    @GetMapping("category/{category}")
+    fun getByCategory(@PathVariable category: Category): ResponseEntity<List<ONG>> {
+        val ongs = repository.findByCategory(category)
+        return if (ongs.isNotEmpty()) {
+            ResponseEntity.ok(ongs)
+        } else {
+            ResponseEntity.notFound().build()
+        }
+    }
+
     @PutMapping("/{id}")
     fun update(@PathVariable id: Long, @RequestBody ONG: ONG) : ResponseEntity<ONG> =
             repository.findById(id).map {

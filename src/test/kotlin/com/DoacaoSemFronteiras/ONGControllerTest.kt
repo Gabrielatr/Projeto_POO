@@ -47,7 +47,6 @@ class ONGControllerTest {
         val csvFile = CSVFile("src/main/kotlin/com/DoacaoSemFronteiras/ongs.csv")
         val lista = csvFile.ongs
         ONGRepository.saveAll(lista)
-        println(ONGRepository.saveAll(lista))
         val ONG = ONGRepository.findById(1).get()
 
         mockMvc.perform(MockMvcRequestBuilders.get("/ONGs/1"))
@@ -59,6 +58,21 @@ class ONGControllerTest {
             .andDo(MockMvcResultHandlers.print())
 
         val finById = ONGRepository.findById(1)
+    }
+    @Test
+    fun `test find category`() {
+        var csvFile = CSVFile("src/main/kotlin/com/DoacaoSemFronteiras/ongs.csv")
+        var lista = csvFile.ongs
+        ONGRepository.saveAll(lista)
+        val category = Category.valueOf("EDUCAÇÃO").toString().trim()
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/ONGs/category/${category}"))
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("\$[0].id").isNumber)
+            .andExpect(MockMvcResultMatchers.jsonPath("\$[0].name").isString)
+            .andExpect(MockMvcResultMatchers.jsonPath("\$[0].category").isString)
+            .andExpect(MockMvcResultMatchers.jsonPath("\$[0].url").isString)
+            .andDo(MockMvcResultHandlers.print())
     }
 
     @Test
