@@ -37,6 +37,16 @@ class ONGController(private val repository: ONGRepository) {
     fun getPortugalONGs() : ResponseEntity<List<ONG>> {
         val ongsPortuguesas = repository.findAll().filter { it.country == "Portugal" }
         return ResponseEntity.ok(ongsPortuguesas)
+
+    }
+    @GetMapping("category/{category}")
+    fun getByCategory(@PathVariable category: Category): ResponseEntity<List<ONG>> {
+        val ongs = repository.findByCategory(category)
+        return if (ongs.isNotEmpty()) {
+            ResponseEntity.ok(ongs)
+        } else {
+            ResponseEntity.notFound().build()
+        }
     }
 
     @PutMapping("/{id}")
