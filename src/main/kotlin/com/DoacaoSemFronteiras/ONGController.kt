@@ -1,13 +1,11 @@
 package com.DoacaoSemFronteiras
 
-import com.DoacaoSemFronteiras.ONGRepository
-import org.springframework.data.domain.Example
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/ONGs")
+@RequestMapping("/ongs")
 class ONGController(private val repository: ONGRepository) {
 
     @PostMapping
@@ -20,6 +18,7 @@ class ONGController(private val repository: ONGRepository) {
 
     @GetMapping
     fun getAll(): List<ONG> = repository.findAll()
+
 
     @GetMapping("/{id}")
     fun getById(@PathVariable id: Long) : ResponseEntity<ONG> =

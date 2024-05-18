@@ -1,36 +1,48 @@
 package com.DoacaoSemFronteiras
 
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.jsonschema.JsonSerializableSchema
+import org.intellij.lang.annotations.Pattern
+import org.jetbrains.annotations.NotNull
+
 import java.io.File
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
+import java.io.Serial
+import javax.persistence.*
 
 enum class Category(val descricao: String) {
-        EDUCAÇÃO("Educação"),
-        SAÚDE("Saúde"),
-        MEIO_AMBIENTE("Meio Ambiente"),
-        SOCIAL("Social"),
-        CRIANÇA("Criança"),
-        VIOLÊNCIA("Violência"),
-        DEFICIÊNCIA("Deficiência"),
-        SEGURANÇA_ALIMENTAR("Segurança Alimentar"),
-        CULTURA_E_ARTE("Cultura e Arte"),
-        MULHER("Mulher"),
-        SEGURANÇA("Segurança");
+        Educação("Educação"),
+        Saúde("Saúde"),
+        Meio_Ambiente("Meio Ambiente"),
+        Social("Social"),
+        Criança("Criança"),
+        Violência("Violência"),
+        Deficiência("Deficiência"),
+        Segurança_Alimentar("Segurança Alimentar"),
+        Cultura_e_Arte("Cultura e Arte"),
+        Mulher("Mulher"),
+        Segurança("Segurança");
 
-        companion object {
-                fun fromDescricao(descricao: String): Category{
-                        return values().first { it.descricao == descricao }
-                }
-        }
+
+
+//        companion object {
+//                fun fromDescricao(descricao: String): Category{
+//                        return values().first { it.descricao == descricao }
+//                }
+//        }
 }
 
-@Entity(name = "ONG")
-data class ONG(
+
+@Entity
+data class ONG  (
         @Id @GeneratedValue
-        var id: Long? = null,
+        var id: Long = 0,
+        @JsonProperty("name")
         val name: String,
+        @JsonProperty("category")
+        @Enumerated(EnumType.STRING)
         val category: Category,
+        @JsonProperty("country")
         val country: String,
+        @JsonProperty("url")
         val url: String
 )
