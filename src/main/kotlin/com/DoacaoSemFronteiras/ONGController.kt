@@ -20,7 +20,7 @@ class ONGController(private val repository: ONGRepository) {
     fun getAll(): List<ONG> = repository.findAll()
 
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id:\\d+}")
     fun getById(@PathVariable id: Long) : ResponseEntity<ONG> =
             repository.findById(id).map {
                 ResponseEntity.ok(it)
@@ -37,17 +37,19 @@ class ONGController(private val repository: ONGRepository) {
         val ongsPortuguesas = repository.findAll().filter { it.country == "Portugal" }
         return ResponseEntity.ok(ongsPortuguesas)
     }
-    @GetMapping("category/{category}")
+    @GetMapping("/{category:[\\p{L}_]+}")
     fun getByCategory(@PathVariable category: Category): ResponseEntity<List<ONG>> {
-        val ongs = repository.findByCategory(category)
-        return if (ongs.isNotEmpty()) {
-            ResponseEntity.ok(ongs)
-        } else {
-            ResponseEntity.notFound().build()
-        }
+        val ongs = repository.findAll().filter { it.category == category }
+        return ResponseEntity.ok(ongs)
+//        val ongs = repository.findByCategory(category)
+//        return if (ongs.isNotEmpty()) {
+//            ResponseEntity.ok(ongs)
+//        } else {
+//            ResponseEntity.notFound().build()
+//        }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id:\\d+}")
     fun update(@PathVariable id: Long, @RequestBody ONG: ONG) : ResponseEntity<ONG> =
             repository.findById(id).map {
                 val ONGToUpdate = it.copy(
@@ -58,7 +60,7 @@ class ONGController(private val repository: ONGRepository) {
                 ResponseEntity.ok(repository.save(ONGToUpdate))
             }.orElse(ResponseEntity.notFound().build())
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id:\\d+}")
     fun delete(@PathVariable id: Long) : ResponseEntity<Void> =
             repository.findById(id).map {
                 repository.delete(it)

@@ -1,33 +1,40 @@
 package com.DoacaoSemFronteiras
 
-import java.io.File
-import java.io.IOException
+import org.springframework.boot.ApplicationRunner
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.core.io.ClassPathResource
+import java.io.*
 
 class CSVFile(val path: String) {
     val ongs = mutableListOf<ONG>()
 
-    init{
+    init {
         try {
             readFile(File(path))
-        }catch (e: IOException){
+        } catch (e: IOException) {
             println(e.message)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             println(e.message)
         }
     }
 
-    fun readFile(csvFile: File){
-//        csvFile.forEachLine { line ->
-//            val props = line.split(",");
-//            val id = props[0].trim().toLong()
-//            val pais = props[3].trim()
-//            val category = Category.valueOf(props[2].trim().toUpperCase().replace(" ", "_"))
-//            val ong = ONG(id, props[1], category, pais, props[4])
-//
-//            when (pais) {
-//                "Portugal", "Brasil" -> ongs.add(ong)
-//            }
-//        }
-    }
+    fun readFile(csvFile: File) {
+        csvFile.forEachLine { line ->
+            val props = line.split(",")
+            val ong = ONG(
+                id = props[0].trim().toLong(),
+                name = props[1].trim(),
+                category = Category.fromDescricao(props[2].trim()),
+                country = props[3].trim(),
+                url = props[4].trim()
+            )
+            when (ong.country) {
+                "Portugal", "Brasil" -> ongs.add(ong)
+            }
 
+        }
+
+    }
 }
+

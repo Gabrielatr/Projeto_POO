@@ -24,11 +24,11 @@ enum class Category(val descricao: String) {
 
 
 
-//        companion object {
-//                fun fromDescricao(descricao: String): Category{
-//                        return values().first { it.descricao == descricao }
-//                }
-//        }
+        companion object {
+                fun fromDescricao(descricao: String): Category{
+                        return values().first { it.descricao == descricao }
+                }
+        }
 }
 
 
