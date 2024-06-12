@@ -22,11 +22,10 @@ enum class Category(val descricao: String) {
         Mulher("Mulher"),
         Segurança("Segurança");
 
-
-
         companion object {
-                fun fromDescricao(descricao: String): Category{
-                        return values().first { it.descricao == descricao }
+                fun fromDescricao(descricao: String): Category?
+                {
+                        return values().firstOrNull { it.descricao == descricao }
                 }
         }
 }
@@ -34,15 +33,20 @@ enum class Category(val descricao: String) {
 
 @Entity
 data class ONG  (
-        @Id @GeneratedValue
-        var id: Long = 0,
+        @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+        val id: Integer,
         @JsonProperty("name")
         val name: String,
         @JsonProperty("category")
-        @Enumerated(EnumType.STRING)
-        val category: Category,
+        val category: String,
         @JsonProperty("country")
         val country: String,
         @JsonProperty("url")
-        val url: String
-)
+        val url: String = ""
+){
+        init{
+                require(name.isNotBlank()) {"O nome não pode estar vazio"}
+                require(Category.fromDescricao(category) != null) {"A categoria está errada. Não existe no nosso sistema."}
+                require(country == "Brasil" || country == "Portugal") {"Somente aceitamos instituições do Brasil ou de Portugal no momento"}
+        }
+}
