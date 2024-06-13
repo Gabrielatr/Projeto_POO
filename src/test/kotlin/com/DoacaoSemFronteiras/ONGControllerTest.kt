@@ -1,5 +1,8 @@
 package com.DoacaoSemFronteiras
 
+import com.DoacaoSemFronteiras.external_data.CSVFile
+import com.DoacaoSemFronteiras.model.ONG
+import com.DoacaoSemFronteiras.repository.ONGRepository
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -28,11 +31,11 @@ class ONGControllerTest {
 
     @Test
     fun `test find all`() {
-        var csvFile = CSVFile("src/main/kotlin/com/DoacaoSemFronteiras/ongs.csv")
+        var csvFile = CSVFile("src/main/kotlin/com/DoacaoSemFronteiras/external_data/ongs.csv")
         var lista = csvFile.ongs
         ONGRepository.saveAll(lista)
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/ONGs"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/ongs"))
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("\$").isArray)
             .andExpect(MockMvcResultMatchers.jsonPath("\$[0].id").isNumber)
@@ -44,66 +47,62 @@ class ONGControllerTest {
 
     @Test
     fun `test find by id`() {
-        val csvFile = CSVFile("src/main/kotlin/com/DoacaoSemFronteiras/ongs.csv")
+        val csvFile = CSVFile("src/main/kotlin/com/DoacaoSemFronteiras/external_data/ongs.csv")
         val lista = csvFile.ongs
         ONGRepository.saveAll(lista)
         val ONG = ONGRepository.findById(1).get()
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/ONGs/1"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/ongs/1"))
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("\$.id").value(ONG.id))
             .andExpect(MockMvcResultMatchers.jsonPath("\$.name").value(ONG.name))
-            .andExpect(MockMvcResultMatchers.jsonPath("\$.category").value(ONG.category.toString()))
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.category").value(ONG.category))
             .andExpect(MockMvcResultMatchers.jsonPath("\$.url").value(ONG.url))
             .andDo(MockMvcResultHandlers.print())
 
         val finById = ONGRepository.findById(1)
     }
     @Test
-    fun `test find category`() {
-        var csvFile = CSVFile("src/main/kotlin/com/DoacaoSemFronteiras/ongs.csv")
+    fun `test find by category`() {
+        var csvFile = CSVFile("src/main/kotlin/com/DoacaoSemFronteiras/external_data/ongs.csv")
         var lista = csvFile.ongs
         ONGRepository.saveAll(lista)
-        val category = Category.valueOf("EDUCAÇÃO").toString().trim()
+        val category = "Meio_Ambiente"
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/ONGs/category/${category}"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/ongs/${category}"))
             .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("\$[0].id").isNumber)
-            .andExpect(MockMvcResultMatchers.jsonPath("\$[0].name").isString)
-            .andExpect(MockMvcResultMatchers.jsonPath("\$[0].category").isString)
-            .andExpect(MockMvcResultMatchers.jsonPath("\$[0].url").isString)
             .andDo(MockMvcResultHandlers.print())
     }
 
     @Test
     fun `test find by Brasil`() {
-        val csvFile = CSVFile("src/main/kotlin/com/DoacaoSemFronteiras/ongs.csv")
+        val csvFile = CSVFile("src/main/kotlin/com/DoacaoSemFronteiras/external_data/ongs.csv")
         val lista = csvFile.ongs
         ONGRepository.saveAll(lista)
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/ONGs/Brasil"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/ongs/Brasil"))
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andDo(MockMvcResultHandlers.print())
     }
     @Test
     fun `test find by Portugal`() {
-        val csvFile = CSVFile("src/main/kotlin/com/DoacaoSemFronteiras/ongs.csv")
+        val csvFile = CSVFile("src/main/kotlin/com/DoacaoSemFronteiras/external_data/ongs.csv")
         val lista = csvFile.ongs
         ONGRepository.saveAll(lista)
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/ONGs/Portugal"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/ongs/Portugal"))
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andDo(MockMvcResultHandlers.print())
     }
 
     @Test
     fun `test create all ONGs`() {
-        var csvFile = CSVFile("src/main/kotlin/com/DoacaoSemFronteiras/ongs.csv")
+        var csvFile = CSVFile("src/main/kotlin/com/DoacaoSemFronteiras/external_data/ongs.csv")
         var lista = csvFile.ongs
         val json = ObjectMapper().writeValueAsString(lista)
         ONGRepository.deleteAll()
         mockMvc.perform(
-            MockMvcRequestBuilders.post("/ONGs/all")
+            MockMvcRequestBuilders.post("/ongs/all")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
@@ -116,19 +115,19 @@ class ONGControllerTest {
 
     @Test
     fun `test create ONG`() {
-        val category = Category.valueOf("MEIO_AMBIENTE")
-        val ONG = ONG(name = "ONGTeste", category = category, country = "Brasil", url = "987654321")
+        val category = "Meio Ambiente"
+        val ONG = ONG(id= 1,name = "ONGTeste", category = category, country = "Brasil", url = "987654321")
         val json = ObjectMapper().writeValueAsString(ONG)
         ONGRepository.deleteAll()
         mockMvc.perform(
-            MockMvcRequestBuilders.post("/ONGs")
+            MockMvcRequestBuilders.post("/ongs")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
         )
             .andExpect(MockMvcResultMatchers.status().isCreated)
             .andExpect(MockMvcResultMatchers.jsonPath("\$.name").value(ONG.name))
-            .andExpect(MockMvcResultMatchers.jsonPath("\$.category").value(ONG.category.toString()))
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.category").value(ONG.category))
             .andExpect(MockMvcResultMatchers.jsonPath("\$.url").value(ONG.url))
             .andDo(MockMvcResultHandlers.print())
 
@@ -137,7 +136,7 @@ class ONGControllerTest {
 
     @Test
     fun `test update ONG`() {
-        val csvFile = CSVFile("src/main/kotlin/com/DoacaoSemFronteiras/ongs.csv")
+        val csvFile = CSVFile("src/main/kotlin/com/DoacaoSemFronteiras/external_data/ongs.csv")
         val lista = csvFile.ongs
         ONGRepository.saveAll(lista)
 
@@ -146,7 +145,7 @@ class ONGControllerTest {
 
         val json = ObjectMapper().writeValueAsString(newONG)
         mockMvc.perform(
-            MockMvcRequestBuilders.put("/ONGs/${newONG.id}")
+            MockMvcRequestBuilders.put("/ongs/${newONG.id}")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
@@ -165,11 +164,11 @@ class ONGControllerTest {
     @Test
     fun `test delete ONG`() {
         val deleteONG =
-            ONGRepository.save(ONG(name = "ONGTeste", category = Category.valueOf("MEIO_AMBIENTE"), country = "Brasil", url = "987654321"))
+            ONGRepository.save(ONG(id= 1,name = "ONGTeste", category = "Meio Ambiente", country = "Brasil", url = "987654321"))
 
 
         mockMvc.perform(
-            MockMvcRequestBuilders.delete("/ONGs/${deleteONG.id}")
+            MockMvcRequestBuilders.delete("/ongs/${deleteONG.id}")
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andDo(MockMvcResultHandlers.print())

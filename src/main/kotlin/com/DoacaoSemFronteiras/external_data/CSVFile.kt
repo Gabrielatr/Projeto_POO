@@ -26,7 +26,7 @@ class CSVFile(val path: String) {
             val ong = ONG(
                 id = props[0].trim().toLong(),
                 name = props[1].trim(),
-                category = Category.fromDescricao(props[2].trim()),
+                category = props[2].trim(),
                 country = props[3].trim(),
                 url = props[4].trim()
             )

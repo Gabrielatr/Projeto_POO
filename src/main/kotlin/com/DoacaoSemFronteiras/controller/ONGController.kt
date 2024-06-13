@@ -1,5 +1,6 @@
 package com.DoacaoSemFronteiras.controller
 
+import com.DoacaoSemFronteiras.model.Category
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -41,7 +42,7 @@ class ONGController(private val repository: ONGRepository) {
     }
     @GetMapping("/{category:[\\p{L}_]+}")
     fun getByCategory(@PathVariable category: Category): ResponseEntity<List<ONG>> {
-        val ongs = repository.findAll().filter { it.category == category }
+        val ongs = repository.findAll().filter { it.category == category.descricao }
         return ResponseEntity.ok(ongs)
 //        val ongs = repository.findByCategory(category)
 //        return if (ongs.isNotEmpty()) {
