@@ -9,6 +9,7 @@ import com.DoacaoSemFronteiras.repository.ONGRepository
 
 @RestController
 @RequestMapping("/ongs")
+@CrossOrigin(origins = ["http://localhost:63342"])
 class ONGController(private val repository: ONGRepository) {
 
     @PostMapping
