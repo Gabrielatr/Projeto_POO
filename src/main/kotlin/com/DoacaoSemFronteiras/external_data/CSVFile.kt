@@ -1,5 +1,6 @@
-package com.DoacaoSemFronteiras
+package com.DoacaoSemFronteiras.external_data
 
+import com.DoacaoSemFronteiras.model.ONG
 import org.springframework.boot.ApplicationRunner
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

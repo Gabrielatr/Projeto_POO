@@ -1,8 +1,10 @@
-package com.DoacaoSemFronteiras
+package com.DoacaoSemFronteiras.controller
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import com.DoacaoSemFronteiras.model.ONG
+import com.DoacaoSemFronteiras.repository.ONGRepository
 
 @RestController
 @RequestMapping("/ongs")

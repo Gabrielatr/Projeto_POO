@@ -1,4 +1,4 @@
-package com.DoacaoSemFronteiras
+package com.DoacaoSemFronteiras.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.jsonschema.JsonSerializableSchema
@@ -34,7 +34,7 @@ enum class Category(val descricao: String) {
 @Entity
 data class ONG  (
         @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
-        val id: Integer,
+        val id: Long,
         @JsonProperty("name")
         val name: String,
         @JsonProperty("category")
