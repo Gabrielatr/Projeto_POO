@@ -28,7 +28,7 @@ class ONGController(private val service : IONGService) {
     fun getById(@PathVariable id: Long) : ResponseEntity<ONGDto> =
             service.getById(id)
                 ?.let { ResponseEntity.ok(it) }
-                .orElse(ResponseEntity.notFound().build())
+                ?: ResponseEntity.notFound().build()
 
     @GetMapping("/Brasil")
     fun getBrasilONGs() : ResponseEntity<List<ONGDto>> {
@@ -48,7 +48,7 @@ class ONGController(private val service : IONGService) {
     fun update(@PathVariable id: Long, @RequestBody ong: ONGDto) : ResponseEntity<ONGDto> =
             service.update(id, ong)
                 ?.let { ResponseEntity.ok(it) }
-                .orElse(ResponseEntity.notFound().build())
+                ?: ResponseEntity.notFound().build()
 
     @DeleteMapping("/{id:\\d+}")
     fun delete(@PathVariable id: Long) : ResponseEntity<Void> {

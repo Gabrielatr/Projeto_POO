@@ -12,7 +12,7 @@ interface IONGService {
     fun create(ong: ONGDto): ONGDto
     fun createAll(ongs: MutableList<ONGDto>): MutableList<ONGDto>
     fun getAll(): List<ONGDto>
-    fun getById(id: Long) : Optional<ONGDto>
+    fun getById(id: Long) : ONGDto?
     fun update(id: Long, ONGDto: ONGDto) : ONGDto?
     fun delete(id: Long)
 
