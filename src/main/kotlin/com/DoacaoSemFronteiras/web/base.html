@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>S U D</title>
+    <script type="module">
+        document.getElementById('formElement').addEventListener('submit', function(event) {
+        event.preventDefault();
+        var nome = document.getElementById('nome').value;
+        var categoria = document.getElementById('categoria').value;
+        var pais = document.getElementById('pais').value;
+        var url = document.getElementById('url').value;
+        var ong = {
+            name: nome,
+            category: categoria,
+            country: pais,
+            url: url
+        };
+        fetch('http://localhost:8080/ongs', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(ong)
+        }).then(function(response) {
+            if (response.ok) {
+                document.getElementById('feedback').innerText = 'ONG adicionada com sucesso!';
+                document.getElementById('feedback').style.display = 'block';
+                document.getElementById('formElement').reset();
+            } else {
+                document.getElementById('feedback').innerText = 'Erro ao adicionar ONG!';
+                document.getElementById('feedback').style.display = 'block';
+            }
+        });
+    });
+
+    document.getElementById('listar').addEventListener('click', function(event) {
+        event.preventDefault();
+        fetch('http://localhost:8080/ongs')
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(data) {
+            var ongs = data;
+            var ongsHtml = '';
+            ongs.forEach(function(ong) {
+                ongsHtml += '<div>';
+                ongsHtml += '<h3>' + ong.name + '</h3>';
+                ongsHtml += '<p>' + "Categoria: " + ong.category + '</p>';
+                ongsHtml += '<p>' + "País: " + ong.country + '</p>';
+                ongsHtml += '<p>' + "URL: " + ong.url + '</p>';
+                ongsHtml += '</div>';
+            });
+            document.getElementById('feedback').innerHTML = ongsHtml;
+            document.getElementById('feedback').style.display = 'block';
+        });
+    });
+
+
+    </script>
+
+    <style>
+        body {
+            font-family: Roboto, sans-serif;
+            background-color: #f0f0f0;
+<!--            display: column;-->
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        h1 {
+            text-align: center;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            width: 400px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin: 20vh auto 20px auto;
+
+        }
+        #feedback {
+            width: 600px;
+            padding: 20px;
+            background-color: #D6F4FE;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: none;
+            margin: auto;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        input[type="text"], button {
+            margin-bottom: 10px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+        button {
+            background-color: #D6F4FE;
+            color: black;
+            border: none;
+            cursor: pointer;
+            border-radius: 10px;
+            font-weight: bold;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #D6F4F1;
+        }
+
+    </style>
+</head>
+    <body>
+        <div class="container">
+            <h1>ONGS</h1>
+            <form id="formElement">
+                <input type="text" id="nome" name="nome" placeholder="Nome" required>
+                <input type="text" id="categoria" name="categoria" placeholder="Categoria" required>
+                <input type="text" id="pais" name="pais" placeholder="Pais" required>
+                <input type="text" id="url" name="url" placeholder="Url" required>
+                <button type="submit">Adicionar</button>
+            </form>
+            <button id="listar" type="listar">Mostrar lista de ONGs</button>
+        </div>
+        <br>
+        <br>
+        <div id="feedback"></div>
+    </body>
+</html>

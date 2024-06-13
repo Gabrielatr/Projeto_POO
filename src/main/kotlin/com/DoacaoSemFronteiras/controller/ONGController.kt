@@ -10,6 +10,7 @@ import com.DoacaoSemFronteiras.DTO.ONGDto
 
 @RestController
 @RequestMapping("/ongs")
+@CrossOrigin(origins = ["http://localhost:63342"])
 class ONGController(private val service : IONGService) {
 
     @PostMapping
