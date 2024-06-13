@@ -6,68 +6,53 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import com.DoacaoSemFronteiras.model.ONG
 import com.DoacaoSemFronteiras.repository.ONGRepository
+import com.DoacaoSemFronteiras.DTO.ONGDto
 
 @RestController
 @RequestMapping("/ongs")
-class ONGController(private val repository: ONGRepository) {
+class ONGController(private val service : IONGService) {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun create(@RequestBody ONG: ONG): ONG = repository.save(ONG)
+    fun create(@RequestBody ong: ONGDto): ONGDto = service.create(ong)
 
     @PostMapping("/all")
     @ResponseStatus(HttpStatus.CREATED)
-    fun createAll(@RequestBody ongs: MutableList<ONG>): MutableList<ONG> = repository.saveAll(ongs)
+    fun createAll(@RequestBody ongs: MutableList<ONGDto>): MutableList<ONGDto> = service.createAll(ongs)
 
     @GetMapping
-    fun getAll(): List<ONG> = repository.findAll()
-
+    fun getAll(): List<ONGDto> = service.getAll()
 
     @GetMapping("/{id:\\d+}")
-    fun getById(@PathVariable id: Long) : ResponseEntity<ONG> =
-            repository.findById(id).map {
-                ResponseEntity.ok(it)
-            }.orElse(ResponseEntity.notFound().build())
+    fun getById(@PathVariable id: Long) : ResponseEntity<ONGDto> =
+            service.getById(id)
+                ?.let { ResponseEntity.ok(it) }
+                .orElse(ResponseEntity.notFound().build())
 
     @GetMapping("/Brasil")
-    fun getBrasilONGs() : ResponseEntity<List<ONG>> {
-        val ongsBrasileiras = repository.findAll().filter { it.country == "Brasil" }
-        return ResponseEntity.ok(ongsBrasileiras)
+    fun getBrasilONGs() : ResponseEntity<List<ONGDto>> {
+        return ResponseEntity.ok(service.getBrasilONGs())
     }
 
     @GetMapping("/Portugal")
-    fun getPortugalONGs() : ResponseEntity<List<ONG>> {
-        val ongsPortuguesas = repository.findAll().filter { it.country == "Portugal" }
-        return ResponseEntity.ok(ongsPortuguesas)
+    fun getPortugalONGs() : ResponseEntity<List<ONGDto>> {
+        return ResponseEntity.ok(service.getPortugalONGs())
     }
     @GetMapping("/{category:[\\p{L}_]+}")
-    fun getByCategory(@PathVariable category: Category): ResponseEntity<List<ONG>> {
-        val ongs = repository.findAll().filter { it.category == category.descricao }
-        return ResponseEntity.ok(ongs)
-//        val ongs = repository.findByCategory(category)
-//        return if (ongs.isNotEmpty()) {
-//            ResponseEntity.ok(ongs)
-//        } else {
-//            ResponseEntity.notFound().build()
-//        }
+    fun getByCategory(@PathVariable category: String): ResponseEntity<List<ONGDto>> {
+        return ResponseEntity.ok(service.getByCategory(category))
     }
 
     @PutMapping("/{id:\\d+}")
-    fun update(@PathVariable id: Long, @RequestBody ONG: ONG) : ResponseEntity<ONG> =
-            repository.findById(id).map {
-                val ONGToUpdate = it.copy(
-                        name = ONG.name,
-                        category = ONG.category,
-                        url = ONG.url
-                )
-                ResponseEntity.ok(repository.save(ONGToUpdate))
-            }.orElse(ResponseEntity.notFound().build())
+    fun update(@PathVariable id: Long, @RequestBody ong: ONGDto) : ResponseEntity<ONGDto> =
+            service.update(id, ong)
+                ?.let { ResponseEntity.ok(it) }
+                .orElse(ResponseEntity.notFound().build())
 
     @DeleteMapping("/{id:\\d+}")
-    fun delete(@PathVariable id: Long) : ResponseEntity<Void> =
-            repository.findById(id).map {
-                repository.delete(it)
-                ResponseEntity<Void>(HttpStatus.OK)
-            }.orElse(ResponseEntity.notFound().build())
+    fun delete(@PathVariable id: Long) : ResponseEntity<Void> {
+        service.delete(id)
+        return ResponseEntity(HttpStatus.OK)
+    }
 
 }

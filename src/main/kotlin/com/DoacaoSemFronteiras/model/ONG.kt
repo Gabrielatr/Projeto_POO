@@ -34,7 +34,7 @@ enum class Category(val descricao: String) {
 @Entity
 data class ONG  (
         @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
-        val id: Long,
+        val id: Long?,
         @JsonProperty("name")
         val name: String,
         @JsonProperty("category")
