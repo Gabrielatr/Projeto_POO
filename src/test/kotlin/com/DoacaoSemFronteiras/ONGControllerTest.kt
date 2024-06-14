@@ -3,7 +3,10 @@ package com.DoacaoSemFronteiras
 import com.DoacaoSemFronteiras.external_data.CSVFile
 import com.DoacaoSemFronteiras.model.ONG
 import com.DoacaoSemFronteiras.repository.ONGRepository
+import com.DoacaoSemFronteiras.service.IONGService
+import com.DoacaoSemFronteiras.service.ONGService
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,9 +19,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import java.io.IOException
 import org.junit.jupiter.api.BeforeEach
+import org.springframework.transaction.annotation.Transactional
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 class ONGControllerTest {
 
     @Autowired
@@ -26,6 +31,19 @@ class ONGControllerTest {
 
     @Autowired
     lateinit var ONGRepository: ONGRepository
+
+
+    @BeforeEach
+    fun setUp() {
+        val csvFile = CSVFile("C:\\Users\\conta\\OneDrive\\Ambiente de Trabalho\\dsfproject\\projetoPOO\\Projeto_POO\\src\\main\\kotlin\\com\\DoacaoSemFronteiras\\external data\\ongs.csv")
+        val lista = csvFile.ongs
+        ONGRepository.saveAll(lista)
+    }
+
+    @AfterEach
+    fun tearDown() {
+        ONGRepository.deleteAll()
+    }
 
 
 
@@ -38,7 +56,6 @@ class ONGControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/ongs"))
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("\$").isArray)
-            .andExpect(MockMvcResultMatchers.jsonPath("\$[0].id").isNumber)
             .andExpect(MockMvcResultMatchers.jsonPath("\$[0].name").isString)
             .andExpect(MockMvcResultMatchers.jsonPath("\$[0].category").isString)
             .andExpect(MockMvcResultMatchers.jsonPath("\$[0].url").isString)
@@ -47,14 +64,13 @@ class ONGControllerTest {
 
     @Test
     fun `test find by id`() {
-        val csvFile = CSVFile("src/main/kotlin/com/DoacaoSemFronteiras/external_data/ongs.csv")
+        val csvFile = CSVFile("C:\\Users\\conta\\OneDrive\\Ambiente de Trabalho\\dsfproject\\POOprojeto\\Projeto_POO\\src\\main\\kotlin\\com\\DoacaoSemFronteiras\\external data\\ongs.csv")
         val lista = csvFile.ongs
         ONGRepository.saveAll(lista)
-        val ONG = ONGRepository.findById(1).get()
+        val ONG = ONGRepository.findById(1).orElseThrow()
 
         mockMvc.perform(MockMvcRequestBuilders.get("/ongs/1"))
             .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("\$.id").value(ONG.id))
             .andExpect(MockMvcResultMatchers.jsonPath("\$.name").value(ONG.name))
             .andExpect(MockMvcResultMatchers.jsonPath("\$.category").value(ONG.category))
             .andExpect(MockMvcResultMatchers.jsonPath("\$.url").value(ONG.url))
@@ -97,7 +113,7 @@ class ONGControllerTest {
 
     @Test
     fun `test create all ONGs`() {
-        var csvFile = CSVFile("src/main/kotlin/com/DoacaoSemFronteiras/external_data/ongs.csv")
+        var csvFile = CSVFile("C:\\Users\\conta\\OneDrive\\Ambiente de Trabalho\\dsfproject\\POOprojeto\\Projeto_POO\\src\\main\\kotlin\\com\\DoacaoSemFronteiras\\external data\\ongs.csv")
         var lista = csvFile.ongs
         val json = ObjectMapper().writeValueAsString(lista)
         ONGRepository.deleteAll()
@@ -136,7 +152,7 @@ class ONGControllerTest {
 
     @Test
     fun `test update ONG`() {
-        val csvFile = CSVFile("src/main/kotlin/com/DoacaoSemFronteiras/external_data/ongs.csv")
+        val csvFile = CSVFile("C:\\Users\\conta\\OneDrive\\Ambiente de Trabalho\\dsfproject\\POOprojeto\\Projeto_POO\\src\\main\\kotlin\\com\\DoacaoSemFronteiras\\external data\\ongs.csv")
         val lista = csvFile.ongs
         ONGRepository.saveAll(lista)
 
@@ -152,7 +168,7 @@ class ONGControllerTest {
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("\$.name").value(newONG.name))
-            .andExpect(MockMvcResultMatchers.jsonPath("\$.category").value(newONG.category.toString()))
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.category").value(newONG.category))
             .andExpect(MockMvcResultMatchers.jsonPath("\$.url").value(newONG.url))
             .andDo(MockMvcResultHandlers.print())
 

@@ -10,7 +10,6 @@ data class ONGDto  (
 )
 
 fun ONGDto.toEntity(): ONG = ONG(
-    id = null,
     name = this.name,
     category = this.category,
     country = this.country,

@@ -25,16 +25,21 @@ enum class Category(val descricao: String) {
         companion object {
                 fun fromDescricao(descricao: String): Category?
                 {
-                        return values().firstOrNull { it.descricao == descricao }
+                        val formattedDescricao = descricao.replace("_", " ")
+                        return values().firstOrNull { it.descricao == formattedDescricao }
                 }
         }
 }
 
 
 @Entity
+@Table(name = "ong")
 data class ONG  (
-        @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
-        val id: Long?,
+//        @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+        @Id
+        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ong_seq")
+        @SequenceGenerator(name = "ong_seq", sequenceName = "ong_seq", allocationSize = 1)
+        val id: Long = 0,
         @JsonProperty("name")
         val name: String,
         @JsonProperty("category")

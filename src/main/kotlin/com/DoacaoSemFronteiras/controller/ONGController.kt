@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*
 import com.DoacaoSemFronteiras.model.ONG
 import com.DoacaoSemFronteiras.repository.ONGRepository
 import com.DoacaoSemFronteiras.DTO.ONGDto
+import com.DoacaoSemFronteiras.service.IONGService
 
 @RestController
 @RequestMapping("/ongs")
@@ -41,7 +42,8 @@ class ONGController(private val service : IONGService) {
     }
     @GetMapping("/{category:[\\p{L}_]+}")
     fun getByCategory(@PathVariable category: String): ResponseEntity<List<ONGDto>> {
-        return ResponseEntity.ok(service.getByCategory(category))
+        val formattedCategory = category.replace("_", " ")
+        return ResponseEntity.ok(service.getByCategory(formattedCategory))
     }
 
     @PutMapping("/{id:\\d+}")

@@ -3,13 +3,15 @@ package com.DoacaoSemFronteiras.service
 import com.DoacaoSemFronteiras.model.ONG
 import com.DoacaoSemFronteiras.repository.ONGRepository
 import com.DoacaoSemFronteiras.DTO.ONGDto
+import com.DoacaoSemFronteiras.DTO.toDto
+import com.DoacaoSemFronteiras.DTO.toEntity
 import org.springframework.stereotype.Service
 import java.util.Optional
 
 @Service
 class ONGService(private val repository: ONGRepository) : IONGService{
 
-    override fun create(ong: ONGDto): ONGDto { 
+    override fun create(ong: ONGDto): ONGDto {
         return repository.save(ong.toEntity()).toDto()
      }
 
