@@ -1,13 +1,11 @@
 package com.DoacaoSemFronteiras
 
 import com.DoacaoSemFronteiras.external_data.CSVFile
-import com.DoacaoSemFronteiras.repository.ONGRepository
 import com.DoacaoSemFronteiras.service.ONGService
 import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
-import com.DoacaoSemFronteiras.DTO.toDto
 
 @SpringBootApplication
 class DoacaoSemFronteirasApiApplication {

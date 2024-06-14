@@ -1,12 +1,9 @@
 package com.DoacaoSemFronteiras.service
 
-import com.DoacaoSemFronteiras.model.ONG
 import com.DoacaoSemFronteiras.repository.ONGRepository
 import com.DoacaoSemFronteiras.DTO.ONGDto
-import com.DoacaoSemFronteiras.DTO.toDto
 import com.DoacaoSemFronteiras.DTO.toEntity
 import org.springframework.stereotype.Service
-import java.util.Optional
 
 @Service
 class ONGService(private val repository: ONGRepository) : IONGService{

@@ -15,10 +15,3 @@ fun ONGDto.toEntity(): ONG = ONG(
     country = this.country,
     url = this.url
 )
-
-fun ONG.toDto(): ONGDto = ONGDto(
-    name = this.name,
-    category = this.category,
-    country = this.country,
-    url = this.url
-)

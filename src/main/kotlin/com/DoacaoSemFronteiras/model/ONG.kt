@@ -1,5 +1,6 @@
 package com.DoacaoSemFronteiras.model
 
+import com.DoacaoSemFronteiras.DTO.ONGDto
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.jsonschema.JsonSerializableSchema
 import org.intellij.lang.annotations.Pattern
@@ -54,4 +55,10 @@ data class ONG  (
                 require(Category.fromDescricao(category) != null) {"A categoria está errada. Não existe no nosso sistema."}
                 require(country == "Brasil" || country == "Portugal") {"Somente aceitamos instituições do Brasil ou de Portugal no momento"}
         }
+        fun toDto(): ONGDto = ONGDto(
+                name = this.name,
+                category = this.category,
+                country = this.country,
+                url = this.url
+        )
 }
